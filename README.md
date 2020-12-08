@@ -1,5 +1,7 @@
 # vue-0
 
+# node version : v8.9.4
+
 config/index.js  23行    改为本地ip地址
 package.json     8行    -host后面的ip地址改为本地ip地址   这样才能通过手机打开网址
 打包网页端的时候屏蔽掉src/router/index.js里面的手机端路由地址
