@@ -60,8 +60,8 @@
         </el-row>
         <el-dialog title="查看准考证信息" :visible.sync="seeDialog" v-if="seeDialog" width="450px">
           <div class="info" id="newImg">
-            <img src="https://api.ostep.com.cn/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
-            <img src="https://api.ostep.com.cn/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous">
+            <img src="http://106.13.40.93:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
+            <img src="http://106.13.40.93:8000/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous">
             <h3>巴中龙泉外国语学校</h3>
             <h3>2020年直升考试</h3>
             <h2 style="margin-bottom: 30px">准考证</h2>
@@ -81,7 +81,7 @@
                 <el-col :span="16"><p>巴中龙泉外国语学校教学楼</p></el-col>
               </el-col>
               <el-col :span="10">
-                <div><img style="width: 125px;height: 175px;" :src="infoData.photo || 'https://api.ostep.com.cn/file/photos/sample.jpeg'" alt=""></div>
+                <div><img style="width: 125px;height: 175px;" :src="infoData.photo || 'http://106.13.40.93:8000/file/photos/sample.jpeg'" alt=""></div>
               </el-col>
             </el-row>
             <div class="senior-time">
@@ -225,7 +225,7 @@
             <el-upload
               class="upload-demo"
               ref="upload"
-              action="https://api.ostep.com.cn/bzlq/candidate/senior/import"
+              action="http://106.13.40.93:8000/bzlq/candidate/senior/import"
               :on-success="handleSuccess"
               :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -269,7 +269,7 @@
         student: '',
         infoData: '',
 
-        uploadUrl: 'https://api.ostep.com.cn/bzlq/file/upload/image',
+        uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
         loading: '',
         classList: [],
         ruleForm: {
@@ -346,7 +346,7 @@
         return arr
       })()
       setInterval(() => {
-        this.axios.post(`https://api.ostep.com.cn/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
+        this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
           if (res.data.result_code === 200) {
 
           } else {
@@ -354,7 +354,7 @@
           }
         })
       }, 3000000)
-      this.axios.post(`https://api.ostep.com.cn/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
+      this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
         if (res.data.result_code === 200) {
           this.getList()
         } else {
@@ -383,7 +383,7 @@
           page_num: this.page.currentPage,
           page_size: this.page.pageSize,
         }
-        this.axios.post(`https://api.ostep.com.cn/bzlq/candidate/senior/search`, query).then(res => {
+        this.axios.post(`http://106.13.40.93:8000/bzlq/candidate/senior/search`, query).then(res => {
           if(res.data.result_code === 200){
             this.tableData = res.data.data.data;
             this.page.totalItems = res.data.data.recordCount
@@ -398,7 +398,7 @@
         })
       },
       see(id){
-        this.axios.get(`https://api.ostep.com.cn/bzlq/candidate/senior/get?id=${id}`).then(res => {
+        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/senior/get?id=${id}`).then(res => {
           if(res.data.result_code === 200){
             this.infoData = res.data.data
           } else {
@@ -440,7 +440,7 @@
         })
       },
       exportList(){
-        window.open('https://api.ostep.com.cn/bzlq/candidate/senior/export')
+        window.open('http://106.13.40.93:8000/bzlq/candidate/senior/export')
       },
       importList(){
         this.importDialog = true
@@ -502,7 +502,7 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('https://api.ostep.com.cn/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('http://106.13.40.93:8000/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 this.seniorDialog = false;
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong>`, '提示', {

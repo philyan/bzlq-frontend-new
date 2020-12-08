@@ -120,7 +120,7 @@
     name: 'senior',
     data() {
       return {
-        uploadUrl: 'https://api.ostep.com.cn/bzlq/file/upload/image',
+        uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
@@ -204,7 +204,7 @@
         }
         return arr
       })()
-      this.axios.get('https://api.ostep.com.cn/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
+      this.axios.get('http://106.13.40.93:8000/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
         if(res.data.result_code === 200){
           this.ruleForm = res.data.data
         } else if(res.data.result_code === 401){
@@ -259,7 +259,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('https://api.ostep.com.cn/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('http://106.13.40.93:8000/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong><br>是否跳转到准考证页面？`, '提示', {
                   dangerouslyUseHTMLString: true,

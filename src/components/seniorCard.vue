@@ -2,8 +2,8 @@
   <div style="width: 100%;overflow-x: hidden;">
     <div v-if="openType">
       <div class="info" id="newImg">
-        <img src="https://api.ostep.com.cn/file/spec/BZLQ_LOGO.png" alt="" style="width: 0.71rem;height: 0.57rem;position: absolute;top: 0;left: 0.03rem;z-index: 1;" crossorigin="anonymous">
-        <img src="https://api.ostep.com.cn/file/spec/signet.png" alt="" style="width: 1rem;height: 1rem;position: absolute;bottom: 1.6rem;right: 0.3rem;z-index: 1;" crossorigin="anonymous">
+        <img src="http://106.13.40.93:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 0.71rem;height: 0.57rem;position: absolute;top: 0;left: 0.03rem;z-index: 1;" crossorigin="anonymous">
+        <img src="http://106.13.40.93:8000/file/spec/signet.png" alt="" style="width: 1rem;height: 1rem;position: absolute;bottom: 1.6rem;right: 0.3rem;z-index: 1;" crossorigin="anonymous">
         <h3>巴中龙泉外国语学校</h3>
         <h3>2020年直升考试</h3>
         <h2 style="margin-bottom: 0.3rem">准考证</h2>
@@ -136,7 +136,7 @@
     },
     mounted(){
       if(getQuery('code')){
-        this.axios.get(`https://api.ostep.com.cn/bzlq/candidate/senior/getByCode?js_code=${getQuery('code')}`).then(res => {
+        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/senior/getByCode?js_code=${getQuery('code')}`).then(res => {
           if (res.data.result_code === 200) {
             this.openType = true
             this.infoData = res.data.data
@@ -155,7 +155,7 @@
           }
         })
       } else if(getQuery('id')){
-        this.axios.get(`https://api.ostep.com.cn/bzlq/candidate/senior/get?id=${getQuery('id')}`).then(res => {
+        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/senior/get?id=${getQuery('id')}`).then(res => {
           if (res.data.result_code === 200) {
             this.openType = true
             this.infoData = res.data.data
@@ -181,7 +181,7 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.get(`https://api.ostep.com.cn/bzlq/candidate/getByIdNumAndName?id_num=${query.identity_num}&name=${query.name}`).then(res => {
+            this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/getByIdNumAndName?id_num=${query.identity_num}&name=${query.name}`).then(res => {
               if (res.data.result_code === 200) {
                 this.openType = true
                 this.infoData = res.data.data
