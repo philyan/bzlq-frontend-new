@@ -349,10 +349,7 @@
                   console.log(JSON.stringify(response));
                   var url = response.data;
                   if(response.status == 200){
-                    this.$emit('getUrl',this.fileImgList[0].url)
-                    this.option.img = "";//重置组件数据
-                    this.loading = false;
-                    this.show = false;
+                    this.ruleForm.photo = url;
                     this.dialogVisible = false;
                   }
                 });
