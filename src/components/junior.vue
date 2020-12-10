@@ -56,7 +56,7 @@
       </el-form-item>
       <el-form-item prop="photo" style="text-align: left">
         <h3><span></span>上传附件/Attachments</h3>
-        <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过3M,格式为PNG/JPG/JPEG)</span></p>
+        <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过2M,格式为PNG/JPG/JPEG)</span></p>
         <!-- <el-upload
           :action="uploadUrl"
           :show-file-list="false"
@@ -67,7 +67,7 @@
           <i v-else class="el-icon-plus"></i>
         </el-upload> -->
          <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
-         <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+         <el-button type="text" @click="dialogVisible = true">点击上传照片</el-button>
         <el-dialog
           title=""
           :visible.sync="dialogVisible"
@@ -77,7 +77,7 @@
               class="btn btn-orange"
               for="uploads"
               style="display:inline-block;width: 100%;padding: 0;font-size: 16px; font-weight: bold;"
-            >点击选择照片</label>
+            >请选择照片</label>
             <input
               type="file"
               id="uploads"
@@ -145,6 +145,7 @@
   .use(Button);
   import { VueCropper } from "vue-cropper";
   import config from "../utils/config";
+  import axios from 'axios';
 
   const getQuery = (variable) => {
     let query = window.location.search.substring(1);
