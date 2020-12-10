@@ -17,7 +17,7 @@ export const router = new Router({
   routes: [
     {
       path:'',
-      redirect: '/login'
+      redirect: '/senior'
     },
     {
       path:'/senior',

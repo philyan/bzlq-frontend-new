@@ -82,7 +82,7 @@
       <el-form-item prop="photo" style="text-align: left">
         <h3><span></span>上传附件/Attachments</h3>
         <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过3M,格式为PNG/JPG/JPEG)</span></p>
-        <el-upload
+        <!-- <el-upload
           :action="uploadUrl"
           :show-file-list="false"
           list-type="picture-card"
@@ -90,7 +90,68 @@
           :before-upload="beforeAvatarUpload">
           <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
           <i v-else class="el-icon-plus"></i>
-        </el-upload>
+        </el-upload> -->
+        <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
+         <el-button type="text" @click="dialogVisible = true">点击上传照片</el-button>
+        <el-dialog
+          title=""
+          :visible.sync="dialogVisible"
+          width="90%">
+            <div class="dialog">
+            <label
+              class="btn btn-orange"
+              for="uploads"
+              style="display:inline-block;width: 100%;padding: 0;font-size: 16px; font-weight: bold;"
+            >请选择照片</label>
+            <input
+              type="file"
+              id="uploads"
+              style="position:absolute; clip:rect(0 0 0 0);"
+              accept="image/png, image/jpeg, image/gif, image/jpg"
+              @change="beforeAvatarUploadPS"
+            />
+            <!-- 剪切图片的弹框-->
+            <div class="upload-dialog" id="cutImagBox">
+              <a-modal title="图片裁剪" class="upload_dialog_a" v-model="isCropper" :on-ok="false" footer>
+                <el-form-item style="margin-top: 0.3rem;">
+                    <el-button @click="turnLeft">左旋</el-button>
+                    <el-button @click="turnRight">右旋</el-button>
+                    <el-button @click="changeScale(2)">放大</el-button>
+                    <el-button @click="changeScale(-2)">缩小</el-button>
+                  </el-form-item>
+                <div class="vue-cropper-box">
+                  <div class="vue-cropper-content" style="height:300px;width:100%;">
+                        <vueCropper
+                          style="height:300px;"
+                          ref="cropper"
+                          :img="option.img"
+                          :outputSize="option.size"
+                          :outputType="option.outputType"
+                          :info="option.info"
+                          :full="option.full"
+                          :canMove="option.canMove"
+                          :canMoveBox="option.canMoveBox"
+                          :centerBox="option.centerBox"
+                          :original="option.original"
+                          :autoCrop="option.autoCrop"
+                          :autoCropWidth="option.autoCropWidth"
+                          :autoCropHeight="option.autoCropHeight"
+                          :fixedBox="option.fixedBox"
+                          :fixed="option.fixed"
+                          :fixedNumber="option.fixedNumber"
+                          @realTime="realTime"
+                          @imgLoad="imgLoad"
+                        ></vueCropper>
+                  </div>
+                </div>
+              </a-modal>
+            </div>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="upload">确 定</el-button>
+          </span>
+        </el-dialog> 
       </el-form-item>
       <el-form-item style="margin-top: 0.3rem;">
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
@@ -101,8 +162,16 @@
 </template>
 
 <script>
+  import Vue from "vue";
   import { save, getOpenId } from '../api'
   import {MessageBox, Message, Loading} from 'element-ui'
+  import { Popup, Uploader, Button } from "vant";
+  Vue.use(Popup)
+  .use(Uploader)
+  .use(Button);
+  import { VueCropper } from "vue-cropper";
+  import config from "../utils/config";
+  import axios from 'axios';
 
   const getQuery = (variable) => {
     let query = window.location.search.substring(1);
@@ -120,10 +189,33 @@
     name: 'senior',
     data() {
       return {
+        dialogVisible: false,
+        visible: false,
         uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
+        fileImgList: [],
+        isCropper: false,
+        //裁剪组件的基础配置option
+        previews: {},
+        option: {
+          img: "", // 裁剪图片的地址
+          info: true, // 裁剪框的大小信息
+          outputSize: 1, // 剪切后的图片质量（0.1-1）
+          full: true, // 输出原图比例截图 props名full
+          outputType: "jpg", // 裁剪生成额图片的格式
+          canMove: false, // 能否拖动图片
+          original: false, // 上传图片是否显示原始宽高
+          canMoveBox: true, // 能否拖动截图框
+          centerBox: true, //截图框是否限制在图片里面
+          autoCrop: true, // 是否默认生成截图框
+          autoCropWidth: 250, // 默认生成截图框宽度
+          autoCropHeight: 350, // 默认生成截图框高度
+          fixedBox: false, // 截图框固定大小
+          fixed: true,
+          fixedNumber: [5, 7] //截图框的宽高比例
+        },
 
         ruleForm: {
           "name":"", //姓名
@@ -196,6 +288,9 @@
         }
       }
     },
+    components:{
+      VueCropper: VueCropper
+    },
     mounted() {
       this.classList = (() => {
         let arr = []
@@ -221,6 +316,137 @@
     },
     computed: {},
     methods: {
+      handlePictureCardPreview(cutImg) {
+      this.option.img = cutImg;
+      console.log(this.option.img);
+      this.isCropper = true;
+    },
+
+    beforeAvatarUploadPS(e) {
+      var file = e.target.files[0];
+      this.option.img = URL.createObjectURL(file);
+
+      const isDWG = file.name.split(".");
+      const format = isDWG[isDWG.length - 1];
+      if (format != "png" && format != "jpg" && format != "jpeg") {
+        this.$message.error("上传文件只能是 png或jpg 格式!");
+        return false;
+      }
+      console.log("beforeAvatarUploadPS");
+      this.isCropper = true;
+    },
+    // 然后我加了几个剪切的按钮进行旋转或放大，并把上传方法一并粘贴到如下：
+
+    turnLeft() {
+      this.$refs.cropper.rotateLeft();
+    },
+    turnRight() {
+      this.$refs.cropper.rotateRight();
+    },
+    cancleCropper() {
+      //取消截图
+      this.isCropper = false;
+    },
+    changeScale(num) {
+      num = num || 1;
+      this.$refs.cropper.changeScale(num);
+    },
+    imgLoad(msg) {
+      console.log("imgLoad");
+      console.log(msg);
+    },
+    // 实时预览函数
+    realTime(data) {
+      console.log("realTime:", data);
+      this.previews = data;
+    },
+    parseInt(base64url){
+      var str = base64url.replace('data:image/jpeg;base64,', '');
+      var strLength = str.length;
+       (fileLength / 1024).toFixed(2);
+    },
+    cancel(){
+      if(this.showMask){
+        this.showMask = !this.showMask
+      }
+    },
+
+    upload(){
+      this.$refs.cropper.getCropBlob((fileImg) => { 
+            let file = fileImg;
+            var strLength = file.length;
+            if((strLength / 1024).toFixed(2)>=2000){
+               alert("图片超过2M,不能上传");
+              return;
+            }
+            let formData = new FormData();
+            formData.append("file", file);
+            this.$http.post("http://106.13.40.93:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+                .then((response)=>{
+                  console.log(JSON.stringify(response));
+                  var url = response.data;
+                  if(response.status == 200){
+                    this.ruleForm.photo = url;
+                    this.dialogVisible = false;
+                  }
+                });
+      })
+    },
+    onCubeImg() {
+      //剪切上传
+      // 获取cropper的截图的base64 数据
+      this.$refs.cropper.getCropData(async fileImg => {
+        this.loading = true;
+        try {
+          let file = fileImg;
+          let data = new FormData();
+          var str = file.replace('data:image/jpeg;base64,', '');
+          var strLength = str.length;
+          if((strLength / 1024).toFixed(2)>=2000){
+             alert("图片超过2M,不能上传");
+            return;
+          }
+          data.append("file", file);
+          console.log(data.get('file'));
+          let config = {
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                };
+          this.$axios
+            .post(
+              "http://192.168.1.4:20100/bzlq/file/upload/image1",
+              data,
+              config
+            )
+            .then(res => {
+              console.log(JSON.stringify(res));
+              let fileurl = res.data;
+              if (res.status == 200) {
+                this.dialogVisible = false;
+                this.fileImgList.push({
+                  url: fileurl
+                });
+                this.$emit('getUrl',this.fileImgList[0].url)
+                this.option.img = "";//重置组件数据
+                this.loading = false;
+                this.show = false;
+              }
+            })
+            .catch(err => {});
+        } catch (e){
+        };
+      });
+    },
+    // 将base64的图片转换为file文件
+    convertBase64UrlToBlob(urlData) {
+      let bytes = window.atob(urlData.split(",")[1]); //去掉url的头，并转换为byte
+      //处理异常,将ascii码小于0的转换为大于0
+      let ab = new ArrayBuffer(bytes.length);
+      let ia = new Uint8Array(ab);
+      for (var i = 0; i < bytes.length; i++) {
+        ia[i] = bytes.charCodeAt(i);
+      }
+      return new Blob([ab], { type: "image/jpeg" });
+    },
       openFullScreen1() {
         this.loading = Loading.service({
           lock: true,
