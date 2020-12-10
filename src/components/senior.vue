@@ -113,11 +113,11 @@
             <!-- 剪切图片的弹框-->
             <div class="upload-dialog" id="cutImagBox">
               <a-modal title="图片裁剪" class="upload_dialog_a" v-model="isCropper" :on-ok="false" footer>
-                <el-form-item style="margin-top: 0.3rem;">
-                    <el-button @click="turnLeft">左旋</el-button>
-                    <el-button @click="turnRight">右旋</el-button>
-                    <el-button @click="changeScale(2)">放大</el-button>
-                    <el-button @click="changeScale(-2)">缩小</el-button>
+                <el-form-item style="margin-top: 0.1rem;">
+                    <el-button type="primary" @click="turnLeft">↺</el-button>
+                    <el-button type="primary" @click="turnRight">↻</el-button>
+                    <el-button type="primary" @click="changeScale(2)">+</el-button>
+                    <el-button type="primary" @click="changeScale(-2)">-</el-button>
                   </el-form-item>
                 <div class="vue-cropper-box">
                   <div class="vue-cropper-content" style="height:300px;width:100%;">
@@ -151,7 +151,7 @@
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="upload">确 定</el-button>
           </span>
-        </el-dialog> 
+        </el-dialog>  
       </el-form-item>
       <el-form-item style="margin-top: 0.3rem;">
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
