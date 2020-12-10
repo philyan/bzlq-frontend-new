@@ -124,7 +124,7 @@
           </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="onCubeImg">确 定</el-button>
+            <el-button type="primary" @click="upload">确 定</el-button>
           </span>
         </el-dialog>    
       </el-form-item>
@@ -291,12 +291,11 @@
 
       const isDWG = file.name.split(".");
       const format = isDWG[isDWG.length - 1];
-      // this.uploadParams.isFile = "1";
-      // uploadParams.file="";
-      // if (format != "png" && format != "jpg" && format != "jpeg") {
-      //   this.$message.error("上传文件只能是 png或jpg 格式!");
-      //   return false;
-      // }
+      if (format != "png" && format != "jpg" && format != "jpeg") {
+        this.$message.error("上传文件只能是 png或jpg 格式!");
+        return false;
+      }
+      console.log("beforeAvatarUploadPS");
       this.isCropper = true;
     },
     // 然后我加了几个剪切的按钮进行旋转或放大，并把上传方法一并粘贴到如下：
@@ -334,6 +333,31 @@
         this.showMask = !this.showMask
       }
     },
+
+    upload(){
+      this.$refs.cropper.getCropBlob((fileImg) => { 
+            let file = fileImg;
+            var strLength = file.length;
+            if((strLength / 1024).toFixed(2)>=2000){
+               alert("图片超过2M,不能上传");
+              return;
+            }
+            let formData = new FormData();
+            formData.append("file", file);
+            this.$http.post("http://106.13.40.93:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+                .then((response)=>{
+                  console.log(JSON.stringify(response));
+                  var url = response.data;
+                  if(response.status == 200){
+                    this.$emit('getUrl',this.fileImgList[0].url)
+                    this.option.img = "";//重置组件数据
+                    this.loading = false;
+                    this.show = false;
+                    this.dialogVisible = false;
+                  }
+                });
+      })
+    },
     onCubeImg() {
       //剪切上传
       // 获取cropper的截图的base64 数据
@@ -355,7 +379,7 @@
                 };
           this.$axios
             .post(
-              "http://106.13.40.93:8000//bzlq/file/upload/image1",
+              "http://192.168.1.4:20100/bzlq/file/upload/image1",
               data,
               config
             )
