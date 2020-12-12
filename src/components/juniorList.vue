@@ -303,6 +303,7 @@
     },
     created(){
       this.getYear()
+      this.getList()
     },
     methods: {
       getYear(){
