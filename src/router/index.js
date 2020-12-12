@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Senior from '@/components/senior'
+import SeniorMobile from '@/components/seniorMobile'
 import SeniorCard from '@/components/seniorCard'
 import Junior from '@/components/junior'
+import JuniorMobile from '@/components/juniorMobile'
 import Fetch from '@/components/fetch'
 import SeniorList from '@/components/seniorList'
+import SeniorListMobile from '@/components/seniorListMobile'
 import JuniorList from '@/components/juniorList'
+import JuniorListMobile from '@/components/juniorListMobile'
 import Login from '@/components/login'
 
 Vue.use(Router)
@@ -17,12 +21,20 @@ export const router = new Router({
   routes: [
     {
       path:'',
-      redirect: '/senior'
+      redirect: '/juniorListMobile'
     },
     {
       path:'/senior',
       name: 'senior',
       component: Senior,
+      meta: {
+        title: '巴中龙泉外国语学校初升高直升考试报名'
+      }
+    },
+    {
+      path:'/seniorMobile',
+      name: 'seniorMobile',
+      component: SeniorMobile,
       meta: {
         title: '巴中龙泉外国语学校初升高直升考试报名'
       }
@@ -39,6 +51,14 @@ export const router = new Router({
       path:'/junior',
       name: 'junior',
       component: Junior,
+      meta: {
+        title: '巴中龙泉外国语学校六年级综合素质测评报名'
+      }
+    },
+    {
+      path:'/juniorMobile',
+      name: 'juniorMobile',
+      component: JuniorMobile,
       meta: {
         title: '巴中龙泉外国语学校六年级综合素质测评报名'
       }
@@ -68,6 +88,14 @@ export const router = new Router({
       }
     },
     {
+      path:'/seniorListMobile',
+      name: 'seniorListMobile',
+      component: SeniorListMobile,
+      meta: {
+        title: '初升高直升考试报名'
+      }
+    },
+    {
       path:'/juniorList',
       name: 'juniorList',
       component: JuniorList,
@@ -75,6 +103,14 @@ export const router = new Router({
         title: '巴中龙泉外国语学校招生考试成绩查询'
       }
     },
+    {
+          path:'/juniorListMobile',
+          name: 'juniorListMobile',
+          component: JuniorListMobile,
+          meta: {
+            title: '六年级综合素质测评报名'
+          }
+        },
   ]
 })
 // 路由前置导航守卫

@@ -7,7 +7,7 @@
         :current-page="currentPage"
         :page-sizes="pageSizes"
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, prev, next, jumper"
         :total="totalItems">
       </el-pagination>
      </el-col>
@@ -16,7 +16,7 @@
 
 <script type="text/ecmascript-6">
   export default {
-    name: 'Pagination',
+    name: 'PaginationMobile',
     props:{
       totalItems:{
         requried:true,
@@ -28,10 +28,10 @@
       },
       pageSizes:{
         type:Array,
-        default:()=>[8,10,20,30,100]
+        default:()=>[5,10,20,30,100]
       },
       pageSize:{
-        default:8,
+        default:5,
         type:Number
       }
     },

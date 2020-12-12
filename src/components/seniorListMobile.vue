@@ -1,82 +1,46 @@
 <template>
   <el-container>
-    <el-header>
-      <el-menu default-active="1" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">{{year}}年招生报名初升高</el-menu-item>
-        <el-menu-item index="2">{{year}}年招生报名小升初</el-menu-item>
-      </el-menu>
-    </el-header>
     <el-main>
       <div class="list">
-        <h2>巴中龙泉外国语学校初升高直升考试查询与报名</h2>
-        <el-row class="padding">
-          <el-form :inline="true" label-width="100px">
-            <el-form-item label="查询条件">
-              <el-input style="width: 500px" placeholder="可模糊匹配以下信息：姓名,考号,区域,毕业学校,班主任姓名,等级,描述,自评" v-model="studentName"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="getList(1)">查询</el-button>
-              <el-button type="primary" @click="add">报名</el-button>
-              <el-button type="primary" @click="exportList">导出</el-button>
-              <el-button type="primary" @click="importList">导入学生成绩</el-button>
-            </el-form-item>
-          </el-form>
-        </el-row>
+        <el-button type="primary" @click="addMobile">开始报名</el-button>
         <el-row class="padding">
           <el-col :span='24'>
             <el-table :data="tableData" border style="width: 100%" class="left">
-              <el-table-column prop="no" label="考号" width="100" fixed></el-table-column>
-              <el-table-column prop="name" label="姓名" width="100" fixed></el-table-column>
-              <el-table-column prop="gender" label="性别" :formatter="genderFmt"></el-table-column>
-              <el-table-column prop="identity_num" label="身份证号码" width="170"></el-table-column>
-              <el-table-column prop="phone" label="电话" width="120"></el-table-column>
-              <el-table-column prop="parent_phone" label="父亲电话" width="120"></el-table-column>
-              <el-table-column prop="parent_phone_back" label="母亲电话" width="120"></el-table-column>
-              <el-table-column prop="region" label="区县" width="80"></el-table-column>
-              <el-table-column prop="primary_school" label="毕业学校" width="200"></el-table-column>
-              <el-table-column prop="class_no" label="班号" width="120"></el-table-column>
-              <el-table-column prop="head_teacher" label="班主任姓名" width="120"></el-table-column>
-              <el-table-column prop="head_teacher_phone" label="班主任电话" width="120"></el-table-column>
-              <el-table-column prop="points_of_chinese" label="语文" width="80"></el-table-column>
-              <el-table-column prop="points_of_math" label="数学" width="80"></el-table-column>
-              <el-table-column prop="points_of_english" label="英语" width="80"></el-table-column>
-              <el-table-column prop="total_points" label="总分" width="80"></el-table-column>
-              <el-table-column prop="level" label="等级" width="80"></el-table-column>
-              <el-table-column prop="fee" label="费用" width="80"></el-table-column>
-              <el-table-column prop="description" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column prop="self_assess" label="自评"></el-table-column>
-              <el-table-column label="操作" width="240" fixed="right">
+              <el-table-column prop="no" label="考号" width="100"></el-table-column>
+              <el-table-column prop="name" label="姓名" width="80"></el-table-column>
+              <el-table-column prop="gender" label="性别" width="50" :formatter="genderFmt"></el-table-column>
+              <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                  <el-button @click="edit(scope.row)" type="text" size="small">修改报名信息</el-button>
-                  <el-button @click="see(scope.row.id)" type="text" size="small">查看准考证信息</el-button>
+                  <el-button @click="editMobile(scope.row)" type="text" size="small">修改</el-button>
+                  <el-button @click="see(scope.row.id)" type="text" size="small">证书</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-col>
         </el-row>
         <el-row class="padding" v-show='tableData.length'>
-          <Pagination :total-items="page.totalItems" :page-size.sync="page.pageSize" :current-page.sync="page.currentPage"
-                      @sizeChange="sizeChange" @pageChange="pageChange"></Pagination>
+          <PaginationMobile :total-items="page.totalItems" :page-size.sync="page.pageSize" :current-page.sync="page.currentPage"
+                      @sizeChange="sizeChange" @pageChange="pageChange"></PaginationMobile>
         </el-row>
-        <el-dialog title="查看准考证信息" :visible.sync="seeDialog" v-if="seeDialog" width="450px">
+        <el-dialog title="查看准考证信息" :visible.sync="seeDialog" v-show="seeDialog" width="450px">
           <div class="info" id="newImg">
             <img src="http://106.13.40.93:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
             <img src="http://106.13.40.93:8000/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous">
             <h3>巴中龙泉外国语学校</h3>
-            <h3>{{year}}年直升考试</h3>
+            <h3>2020年直升考试</h3>
             <h2 style="margin-bottom: 30px">准考证</h2>
             <el-row>
               <el-col :span="14">
                 <el-col :span="8">毕业学校</el-col>
-                <el-col :span="16"><p>{{infoData.primary_school}}&nbsp;</p></el-col>
+                <el-col :span="16"><p>{{infoData.primary_school}}</p></el-col>
                 <el-col :span="8">姓名</el-col>
-                <el-col :span="16">{{infoData.name}}&nbsp;</el-col>
+                <el-col :span="16">{{infoData.name}}</el-col>
                 <el-col :span="8">性别</el-col>
-                <el-col :span="16">{{infoData.gender | genderFilter}}&nbsp;</el-col>
+                <el-col :span="16">{{infoData.gender | genderFilter}}</el-col>
                 <el-col :span="8">报名类别</el-col>
                 <el-col :span="16">直升</el-col>
                 <el-col :span="8">报名序号</el-col>
-                <el-col :span="16"><p>{{infoData.no}}&nbsp;</p></el-col>
+                <el-col :span="16"><p>{{infoData.no}}</p></el-col>
                 <el-col :span="8">考试地点</el-col>
                 <el-col :span="16"><p>巴中龙泉外国语学校教学楼</p></el-col>
               </el-col>
@@ -115,9 +79,9 @@
             <el-button type="primary" @click="imgCreate">生成图片</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="准考证" :visible.sync="ticketDialog" v-if="ticketDialog" width="450px">
+        <el-dialog title="准考证" :visible.sync="ticketDialog" v-if="ticketDialog" width="100%">
           <div class="info">
-            <img :src="ticketImg" alt="">
+            <img :src="ticketImg" alt="" width="100%" height="100%">
           </div>
         </el-dialog>
         <el-dialog title="巴中龙泉外国语学校初升高直升考试报名" :visible.sync="seniorDialog" v-if="seniorDialog" width="650px" @closed="ruleClose">
@@ -243,20 +207,32 @@
 <script>
   import html2canvas from 'html2canvas'
   import {Message, MessageBox, Loading} from 'element-ui'
-  import Pagination from './Pagination.vue'
+  import PaginationMobile from './PaginationMobile.vue'
   import { getSessionItem } from '../common/util'
+
+  const getQuery = (variable) => {
+    let query = window.location.search.substring(1);
+    let vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+      let pair = vars[i].split("=");
+      if (pair[0] == variable) {
+        return pair[1]
+      }
+    }
+    return false;
+  }
 
   export default {
     name: 'juniorList',
     components: {
-      Pagination
+      PaginationMobile
     },
     data () {
       return {
         studentName: '',
         page: {
           currentPage: 1,
-          pageSize: 10,
+          pageSize: 6,
           totalItems: 0
         },
         tableData: [],
@@ -268,6 +244,7 @@
         ticketImg: '',
         student: '',
         infoData: '',
+        openId: '',
         year: '',
 
         uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
@@ -364,15 +341,9 @@
       })
     },
     created(){
-      this.getYear()
+      this.getList()
     },
     methods: {
-      getYear(){
-        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/year`).then(res => {
-          
-          this.year = res.data          
-        })
-      },
       handleSelect(key){
         if(key === '2'){
           this.$router.push({path: '/juniorList'})
@@ -392,11 +363,14 @@
           search_param: this.studentName,
           page_num: this.page.currentPage,
           page_size: this.page.pageSize,
+          // js_code: this.getQuery('code'),
+          // openid: this.openId,
         }
         this.axios.post(`http://106.13.40.93:8000/bzlq/candidate/senior/search`, query).then(res => {
           if(res.data.result_code === 200){
             this.tableData = res.data.data.data;
             this.page.totalItems = res.data.data.recordCount
+            // this.openId = res.data.data.openid?res.data.data.openid:''
           } else {
             MessageBox.alert(`<strong style="color: red">${res.data.msg}</strong>`, '提示', {
               dangerouslyUseHTMLString: true,
@@ -443,8 +417,16 @@
           this.seniorDialog = true
         })
       },
+
+      editMobile(data){
+        this.$router.push({name: 'seniorMobile', params: {stuInfo: data, openid: this.openId}})
+      },
+
       add(){
          this.$router.push({path: '/juniorList'})
+      },
+      addMobile(){
+        this.$router.push({name: 'seniorMobile', params: {stuInfo: null, openid: this.openId}})
       },
       exportList(){
         window.open('http://106.13.40.93:8000/bzlq/candidate/senior/export')

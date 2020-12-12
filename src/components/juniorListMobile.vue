@@ -1,66 +1,33 @@
 <template>
   <el-container>
-    <el-header>
-      <el-menu default-active="2" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">{{year}}年招生报名初升高</el-menu-item>
-        <el-menu-item index="2">{{year}}年招生报名小升初</el-menu-item>
-      </el-menu>
-    </el-header>
     <el-main>
       <div class="list">
-        <h2>巴中龙泉外国语学校六年级综合素质测评查询与报名</h2>
         <el-row class="padding">
-          <el-form :inline="true" label-width="100px">
-            <el-form-item label="查询条件">
-              <el-input style="width: 500px" placeholder="可模糊匹配以下信息：姓名,考号,区域,毕业学校,班主任姓名,等级,描述" v-model="studentName"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="getList(1)">查询</el-button>
-              <el-button type="primary" @click="add">报名</el-button>
-              <el-button type="primary" @click="exportList">导出</el-button>
-              <el-button type="primary" @click="importList">导入学生成绩</el-button>
-            </el-form-item>
-          </el-form>
-        </el-row>
-        <el-row class="padding">
+          <el-button type="primary" @click="addMobile">开始报名</el-button>
           <el-col :span='24'>
             <el-table :data="tableData" border style="width: 100%" class="left">
-              <el-table-column prop="no" label="考号" width="100" fixed></el-table-column>
-              <el-table-column prop="name" label="姓名" width="100" fixed></el-table-column>
-              <el-table-column prop="gender" label="性别" :formatter="genderFmt"></el-table-column>
-              <el-table-column prop="identity_num" label="身份证号码" width="170"></el-table-column>
-              <el-table-column prop="parent_phone" label="父亲电话" width="120"></el-table-column>
-              <el-table-column prop="parent_phone_back" label="母亲电话" width="120"></el-table-column>
-              <el-table-column prop="region" label="区县" width="80"></el-table-column>
-              <el-table-column prop="primary_school" label="毕业学校" width="200"></el-table-column>
-              <el-table-column prop="class_no" label="班号" width="120"></el-table-column>
-              <el-table-column prop="head_teacher" label="班主任姓名" width="120"></el-table-column>
-              <el-table-column prop="head_teacher_phone" label="班主任电话" width="120"></el-table-column>
-              <el-table-column prop="points_of_chinese" label="语文" width="80"></el-table-column>
-              <el-table-column prop="points_of_math" label="数学" width="80"></el-table-column>
-              <el-table-column prop="total_points" label="总分" width="80"></el-table-column>
-              <el-table-column prop="level" label="等级" width="80"></el-table-column>
-              <el-table-column prop="fee" label="费用" width="80"></el-table-column>
-              <el-table-column prop="description" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column label="操作" width="200" fixed="right">
+              <el-table-column prop="no" label="考号" width="100"></el-table-column>
+              <el-table-column prop="name" label="姓名" width="80"></el-table-column>
+              <el-table-column prop="gender" label="性别" width="50" :formatter="genderFmt"></el-table-column>
+              <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                  <el-button @click="edit(scope.row)" type="text" size="small">修改报名信息</el-button>
-                  <el-button @click="see(scope.row.id)" type="text" size="small">查看报名证信息</el-button>
+                  <el-button @click="editMobile(scope.row)" type="text" size="small">修改</el-button>
+                  <!-- <el-button @click="see(scope.row.id)" type="text" size="small">证书</el-button> -->
                 </template>
               </el-table-column>
             </el-table>
           </el-col>
         </el-row>
         <el-row class="padding" v-show='tableData.length'>
-          <Pagination :total-items="page.totalItems" :page-size.sync="page.pageSize" :current-page.sync="page.currentPage"
-                      @sizeChange="sizeChange" @pageChange="pageChange"></Pagination>
+          <PaginationMobile :total-items="page.totalItems" :page-size.sync="page.pageSize" :current-page.sync="page.currentPage"
+                      @sizeChange="sizeChange" @pageChange="pageChange"></PaginationMobile>
         </el-row>
-        <el-dialog title="查看报名证信息" :visible.sync="seeDialog" v-if="seeDialog" width="400px">
+        <el-dialog title="查看报名证信息" :visible.sync="seeDialog" v-if="seeDialog" width="100%">
           <div class="info" id="newImg">
             <img src="http://106.13.40.93:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
             <img src="http://106.13.40.93:8000/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 165px;right: 45px;z-index: 1;" crossorigin="anonymous">
             <h3>巴中龙泉外国语学校</h3>
-            <h3>{{year}}年初中一年级</h3>
+            <h3>2020年初中一年级</h3>
             <h2>报名证</h2>
             <el-row>
               <el-col :span="24"><img style="width: 130px;height: 181px;margin: 10px 0 20px;" :src="infoData.photo || 'http://106.13.40.93:8000/file/photos/sample.jpeg'" alt=""></el-col>
@@ -88,97 +55,6 @@
             <img :src="ticketImg" alt="">
           </div>
         </el-dialog>
-        <el-dialog title="巴中龙泉外国语学校六年级综合素质测评" :visible.sync="juniorDialog" v-if="juniorDialog" width="650px" @closed="ruleClose">
-          <div class="box">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-              <el-form-item prop="name">
-                <h3><span></span>学生中文名/Student Chinese Name</h3>
-                <el-input v-model="ruleForm.name"></el-input>
-              </el-form-item>
-              <el-form-item prop="gender">
-                <h3><span></span>性别/Gender</h3>
-                <el-select style="width: 100%" v-model="ruleForm.gender" placeholder="请选择/Please select...">
-                  <el-option label="男/Male" value="male"></el-option>
-                  <el-option label="女/Female" value="female"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item  prop="identity_num">
-                <h3><span></span>身份证号码/No.</h3>
-                <el-input v-model="ruleForm.identity_num" placeholder="请输入/Please input..."></el-input>
-              </el-form-item>
-              <el-form-item prop="parent_phone">
-                <h3><span></span>父亲手机号/Father's Mobile Phone</h3>
-                <el-input v-model="ruleForm.parent_phone"></el-input>
-              </el-form-item>
-              <el-form-item prop="parent_phone_back">
-                <h3><span></span>母亲手机号/Mother's Mobile Phone</h3>
-                <el-input v-model="ruleForm.parent_phone_back"></el-input>
-              </el-form-item>
-              <el-form-item prop="region">
-                <h3><span></span>毕业学校所在区县/District</h3>
-                <el-select style="width: 100%" v-model="ruleForm.region" placeholder="请选择/Please select...">
-                  <el-option label="通江" value="通江"></el-option>
-                  <el-option label="南江" value="南江"></el-option>
-                  <el-option label="巴州" value="巴州"></el-option>
-                  <el-option label="平昌" value="平昌"></el-option>
-                  <el-option label="恩阳" value="恩阳"></el-option>
-                  <el-option label="外地" value="外地"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item prop="primary_school">
-                <h3><span></span>毕业学校/Graduate from</h3>
-                <el-input v-model="ruleForm.primary_school"></el-input>
-              </el-form-item>
-              <el-form-item prop="class_no">
-                <h3><span></span>班号/Class</h3>
-                <el-select style="width: 100%" v-model="ruleForm.class_no" placeholder="请选择/Please select...">
-                  <el-option v-for="(item,index) in classList" :key="index" :label="item.label" :value="item.label"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item prop="head_teacher">
-                <h3><span></span>班主任/Head Teacher</h3>
-                <el-input v-model="ruleForm.head_teacher"></el-input>
-              </el-form-item>
-              <el-form-item prop="head_teacher_phone">
-                <h3><span></span>班主任电话/Head Teacher's Phone</h3>
-                <el-input v-model="ruleForm.head_teacher_phone"></el-input>
-              </el-form-item>
-              <el-form-item prop="photo" style="text-align: left">
-                <h3><span></span>上传附件/Attachments</h3>
-                <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过3M,格式为PNG/JPG/JPEG)</span></p>
-                <el-upload
-                  :action="uploadUrl"
-                  :show-file-list="false"
-                  list-type="picture-card"
-                  :on-success="bannerSuccess"
-                  :before-upload="beforeAvatarUpload">
-                  <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
-                  <i v-else class="el-icon-plus"></i>
-                </el-upload>
-              </el-form-item>
-              <el-form-item style="margin: 0.3rem 0 0;">
-                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-dialog>
-        <el-dialog title="导入学生成绩" :visible.sync="importDialog" v-if="importDialog" width="450px">
-          <el-form>
-            <el-upload
-              class="upload-demo"
-              ref="upload"
-              action="http://106.13.40.93:8000/bzlq/candidate/junior/import"
-              :on-success="handleSuccess"
-              :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            </el-upload>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="importDialog = false">取 消</el-button>
-            <el-button type="primary" @click="submitUpload">上传到服务器</el-button>
-          </div>
-        </el-dialog>
       </div>
     </el-main>
   </el-container>
@@ -186,20 +62,41 @@
 <script>
   import html2canvas from 'html2canvas'
   import {Message, MessageBox, Loading} from 'element-ui'
-  import Pagination from './Pagination.vue'
+  import PaginationMobile from './PaginationMobile.vue'
   import { getSessionItem } from '../common/util'
+  import Vue from "vue";
+  import { Popup, Uploader, Button } from "vant";
+  Vue.use(Popup)
+  .use(Uploader)
+  .use(Button);
+  import { VueCropper } from "vue-cropper";
+  import config from "../utils/config";
+  import axios from 'axios';
+
+  const getQuery = (variable) => {
+    let query = window.location.search.substring(1);
+    let vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+      let pair = vars[i].split("=");
+      if (pair[0] == variable) {
+        return pair[1]
+      }
+    }
+    return false;
+  }
 
   export default {
-    name: 'juniorList',
+    name: 'juniorListMobile',
     components: {
-      Pagination
+      PaginationMobile
     },
     data () {
       return {
+        openId: '',
         studentName: '',
         page: {
           currentPage: 1,
-          pageSize: 10,
+          pageSize: 6,
           totalItems: 0
         },
         tableData: [],
@@ -211,7 +108,6 @@
         ticketImg: '',
         student: '',
         infoData: '',
-        year: '',
 
         uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
         loading: '',
@@ -284,32 +180,11 @@
         }
         return arr
       })()
-      setInterval(() => {
-        this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
-          if (res.data.result_code === 200) {
-
-          } else {
-            this.$router.push({path: '/login'})
-          }
-        })
-      }, 3000000)
-      this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
-        if (res.data.result_code === 200) {
-          this.getList()
-        } else {
-          this.$router.push({path: '/login'})
-        }
-      })
     },
     created(){
-      this.getYear()
+      this.getList()
     },
     methods: {
-      getYear(){
-        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/year`).then(res => {
-          this.year = res.data
-        })
-      },
       handleSelect(key){
         if(key === '1'){
           this.$router.push({path: '/seniorList'})
@@ -335,6 +210,8 @@
           search_param: this.studentName,
           page_num: this.page.currentPage,
           page_size: this.page.pageSize,
+          // js_code: getQuery('code'),
+          // openid: this.openId,
         }
         this.axios.post(`http://106.13.40.93:8000/bzlq/candidate/junior/search`, query).then(res => {
           if(res.data.result_code === 200){
@@ -386,11 +263,17 @@
           this.juniorDialog = true
         })
       },
+      editMobile(data){
+         this.$router.push({name: 'juniorMobile', params: {stuInfo: data}})
+      },
       add(){
         this.ruleClose()
         this.$nextTick(() => {
           this.juniorDialog = true
         })
+      },
+      addMobile(){
+         this.$router.push({name: 'juniorMobile', params: {stuInfo: null, openid: this.openId}})
       },
       exportList(){
         window.open('http://106.13.40.93:8000/bzlq/candidate/junior/export')
