@@ -21,7 +21,7 @@ export const router = new Router({
   routes: [
     {
       path:'',
-      redirect: '/juniorListMobile'
+      redirect: '/seniorListMobile'
     },
     {
       path:'/senior',

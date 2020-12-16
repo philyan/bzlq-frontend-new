@@ -189,7 +189,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
+        uploadUrl: 'http://139.155.15.107:8000/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
@@ -297,7 +297,7 @@
         }
         return arr
       })()
-      // this.axios.get('http://106.13.40.93:8000/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
+      // this.axios.get('http://139.155.15.107:8000/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
       //   if(res.data.result_code === 200){
       //     this.ruleForm = res.data.data
       //   } else if(res.data.result_code === 401){
@@ -371,6 +371,7 @@
 
     upload(){
       this.$refs.cropper.getCropBlob((fileImg) => { 
+            this.openFullScreen1();
             let file = fileImg;
             var strLength = file.length;
             if((strLength / 1024).toFixed(2)>=2000){
@@ -379,8 +380,9 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://106.13.40.93:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("http://139.155.15.107:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
+                  this.loading.close();
                   console.log(JSON.stringify(response));
                   var url = response.data;
                   if(response.status == 200){
@@ -394,7 +396,6 @@
       //剪切上传
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropData(async fileImg => {
-        this.loading = true;
         try {
           let file = fileImg;
           let data = new FormData();
@@ -411,7 +412,7 @@
                 };
           this.$axios
             .post(
-              "http://192.168.1.4:20100/bzlq/file/upload/image1",
+              "http://139.155.15.107:8000/bzlq/file/upload/image1",
               data,
               config
             )
@@ -419,13 +420,13 @@
               console.log(JSON.stringify(res));
               let fileurl = res.data;
               if (res.status == 200) {
+
                 this.dialogVisible = false;
                 this.fileImgList.push({
                   url: fileurl
                 });
                 this.$emit('getUrl',this.fileImgList[0].url)
                 this.option.img = "";//重置组件数据
-                this.loading = false;
                 this.show = false;
               }
             })
@@ -455,7 +456,7 @@
       },
       beforeAvatarUpload(file) {
         this.openFullScreen1()
-        const isJPG = file.type === 'image/jpeg' || 'image/JPEG' || 'image/jpg' || 'image/JPG' || 'image/png' || 'image/PNG';
+        const isJPG = file.type === 'image/jpeg' || 'image/JPEG' || 'image/jpg' || 'image/JPG' || 'image/png' || 'image/PNG' || blob;
         const isLt1M = file.size / 1024 / 1024 < 3;
 
         if (!isJPG) {
@@ -483,7 +484,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://106.13.40.93:8000/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('http://139.155.15.107:8000/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 // MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong><br>是否跳转到准考证页面？`, '提示', {
                 //   dangerouslyUseHTMLString: true,

@@ -12,7 +12,7 @@
               <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                   <el-button @click="editMobile(scope.row)" type="text" size="small">修改</el-button>
-                  <el-button @click="see(scope.row.id)" type="text" size="small">证书</el-button>
+                  <el-button @click="see(scope.row.id)" type="text" size="small">准考证</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -24,10 +24,12 @@
         </el-row>
         <el-dialog title="查看准考证信息" :visible.sync="seeDialog" v-show="seeDialog" width="450px">
           <div class="info" id="newImg">
-            <img src="http://106.13.40.93:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
-            <img src="http://106.13.40.93:8000/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous">
+            <!-- <img src="http://139.155.15.107:8000/file/spec/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
+            <img src="http://139.155.15.107:8000/file/spec/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous"> -->
+            <img src="../../static/images/BZLQ_LOGO.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
+            <img src="../../static/images/signet.png" alt="" style="width: 100px;height: 100px;position: absolute;bottom: 140px;right: 55px;z-index: 1;" crossorigin="anonymous">
             <h3>巴中龙泉外国语学校</h3>
-            <h3>2020年直升考试</h3>
+            <h3>{{year}}年直升考试</h3>
             <h2 style="margin-bottom: 30px">准考证</h2>
             <el-row>
               <el-col :span="14">
@@ -45,7 +47,7 @@
                 <el-col :span="16"><p>巴中龙泉外国语学校教学楼</p></el-col>
               </el-col>
               <el-col :span="10">
-                <div><img style="width: 125px;height: 175px;" :src="infoData.photo || 'http://106.13.40.93:8000/file/photos/sample.jpeg'" alt=""></div>
+                <div><img id="photo" style="width: 110px;height: 151px;" :src="infoData.photo || 'http://139.155.15.107:8000/file/photos/sample.jpeg'" alt=""></div>
               </el-col>
             </el-row>
             <div class="senior-time">
@@ -79,7 +81,7 @@
             <el-button type="primary" @click="imgCreate">生成图片</el-button>
           </div>
         </el-dialog>
-        <el-dialog title="准考证" :visible.sync="ticketDialog" v-if="ticketDialog" width="100%">
+        <el-dialog title="长按保存图片" :visible.sync="ticketDialog" v-if="ticketDialog" width="100%">
           <div class="info">
             <img :src="ticketImg" alt="" width="100%" height="100%">
           </div>
@@ -189,7 +191,7 @@
             <el-upload
               class="upload-demo"
               ref="upload"
-              action="http://106.13.40.93:8000/bzlq/candidate/senior/import"
+              action="http://139.155.15.107:8000/bzlq/candidate/senior/import"
               :on-success="handleSuccess"
               :auto-upload="false">
               <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -223,7 +225,7 @@
   }
 
   export default {
-    name: 'juniorList',
+    name: 'seniorListMobile',
     components: {
       PaginationMobile
     },
@@ -247,7 +249,7 @@
         openId: '',
         year: '',
 
-        uploadUrl: 'http://106.13.40.93:8000/bzlq/file/upload/image',
+        uploadUrl: 'http://139.155.15.107:8000/bzlq/file/upload/image',
         loading: '',
         classList: [],
         ruleForm: {
@@ -324,7 +326,7 @@
         return arr
       })()
       setInterval(() => {
-        this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
+        this.axios.post(`http://139.155.15.107:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
           if (res.data.result_code === 200) {
 
           } else {
@@ -332,7 +334,7 @@
           }
         })
       }, 3000000)
-      this.axios.post(`http://106.13.40.93:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
+      this.axios.post(`http://139.155.15.107:8000/bzlq/token/verify?token=${getSessionItem('token')}`).then(res => {
         if (res.data.result_code === 200) {
           this.getList()
         } else {
@@ -342,8 +344,14 @@
     },
     created(){
       this.getList()
+      this.getYear();
     },
     methods: {
+      getYear(){
+        this.axios.get(`http://139.155.15.107:8000/bzlq/candidate/year`).then(res => {
+          this.year = res.data          
+        })
+      },
       handleSelect(key){
         if(key === '2'){
           this.$router.push({path: '/juniorList'})
@@ -366,7 +374,7 @@
           // js_code: this.getQuery('code'),
           // openid: this.openId,
         }
-        this.axios.post(`http://106.13.40.93:8000/bzlq/candidate/senior/search`, query).then(res => {
+        this.axios.post(`http://139.155.15.107:8000/bzlq/candidate/senior/search`, query).then(res => {
           if(res.data.result_code === 200){
             this.tableData = res.data.data.data;
             this.page.totalItems = res.data.data.recordCount
@@ -382,7 +390,7 @@
         })
       },
       see(id){
-        this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/senior/get?id=${id}`).then(res => {
+        this.axios.get(`http://139.155.15.107:8000/bzlq/candidate/senior/get?id=${id}`).then(res => {
           if(res.data.result_code === 200){
             this.infoData = res.data.data
           } else {
@@ -399,6 +407,11 @@
         })
       },
       imgCreate(){
+        console.log("create image....")
+        html2canvas(document.getElementById("photo"), opts).then(function (canvas) {
+          let imgUri = canvas.toDataURL("image/jpeg", 2); // 获取生成的图片的url
+          this.infoData.photo = imgUri;
+        })
         this.ticketImg = ''
         let that = this;
         let opts = {useCORS: true,allowTaint: false};
@@ -429,7 +442,7 @@
         this.$router.push({name: 'seniorMobile', params: {stuInfo: null, openid: this.openId}})
       },
       exportList(){
-        window.open('http://106.13.40.93:8000/bzlq/candidate/senior/export')
+        window.open('http://139.155.15.107:8000/bzlq/candidate/senior/export')
       },
       importList(){
         this.importDialog = true
@@ -491,7 +504,7 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://106.13.40.93:8000/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('http://139.155.15.107:8000/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 this.seniorDialog = false;
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong>`, '提示', {

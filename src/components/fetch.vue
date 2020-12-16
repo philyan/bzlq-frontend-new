@@ -82,7 +82,7 @@
       }
     },
     mounted(){
-      this.axios.get('http://106.13.40.93:8000/bzlq/candidate/result?js_code=' + getQuery('code')).then(res => {
+      this.axios.get('http://139.155.15.107:8000/bzlq/candidate/result?js_code=' + getQuery('code')).then(res => {
         if (res.data.result_code === 200) {
           this.openType = true
           this.fetchData = res.data.data
@@ -106,7 +106,7 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.get(`http://106.13.40.93:8000/bzlq/candidate/result/byIdNumAndName?id_num=${query.identity_num}&name=${query.name}
+            this.axios.get(`http://139.155.15.107:8000/bzlq/candidate/result/byIdNumAndName?id_num=${query.identity_num}&name=${query.name}
 `).then(res => {
               if (res.data.result_code === 200) {
                 this.openType = true
