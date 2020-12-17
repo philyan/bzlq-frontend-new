@@ -90,7 +90,7 @@
           <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
           <i v-else class="el-icon-plus"></i>
         </el-upload> -->
-        <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
+        <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar" width="110px" height="151px">
          <el-button type="text" @click="dialogVisible = true">点击上传照片</el-button>
         <el-dialog
           title=""

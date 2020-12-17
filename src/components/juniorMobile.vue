@@ -53,18 +53,9 @@
         <h3><span></span>班主任电话/Head Teacher's Phone</h3>
         <el-input v-model="ruleForm.head_teacher_phone"></el-input>
       </el-form-item>
-      <el-form-item prop="photo" style="text-align: left">
+      <!-- <el-form-item prop="photo" style="text-align: left">
         <h3><span></span>上传附件/Attachments</h3>
         <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过2M,格式为PNG/JPG/JPEG)</span></p>
-        <!-- <el-upload
-          :action="uploadUrl"
-          :show-file-list="false"
-          list-type="picture-card"
-          :on-success="bannerSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
-          <i v-else class="el-icon-plus"></i>
-        </el-upload> -->
          <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
          <el-button type="text" @click="dialogVisible = true">点击上传照片</el-button>
         <el-dialog
@@ -82,9 +73,7 @@
               id="uploads"
               style="position:absolute; clip:rect(0 0 0 0);"
               accept="image/png, image/jpeg, image/gif, image/jpg"
-              @change="beforeAvatarUploadPS"
-            />
-            <!-- 剪切图片的弹框-->
+              @change="beforeAvatarUploadPS"/>
             <div class="upload-dialog" id="cutImagBox">
               <a-modal title="图片裁剪" class="upload_dialog_a" v-model="isCropper" :on-ok="false" footer>
                 <el-form-item style="margin-top: 0.1rem;">
@@ -125,7 +114,7 @@
             <el-button type="primary" @click="upload">上 传</el-button>
           </span>
         </el-dialog>    
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item style="margin-top: 0.3rem;">
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -237,16 +226,17 @@
           head_teacher_phone: [
             { required: true, message: '请输入/Please input...', trigger: 'blur' },
             {pattern: /^1[0-9]{10}$/, message: '请输入正确的手机号格式', trigger: 'blur'}
-          ],
-          photo: [{
-            required: true, trigger: 'blur', validator: (rule, value, callback) => {
-              if (!this.ruleForm.photo) {
-                callback(new Error('请上传一寸照片'))
-              } else {
-                callback()
-              }
-            }
-          }]
+          ]
+          // ,
+          // photo: [{
+          //   required: true, trigger: 'blur', validator: (rule, value, callback) => {
+          //     if (!this.ruleForm.photo) {
+          //       callback(new Error('请上传一寸照片'))
+          //     } else {
+          //       callback()
+          //     }
+          //   }
+          // }]
         }
       }
     },

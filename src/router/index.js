@@ -21,14 +21,14 @@ export const router = new Router({
   routes: [
     {
       path:'',
-      redirect: '/seniorListMobile'
+      redirect: '/login'
     },
     {
       path:'/senior',
       name: 'senior',
       component: Senior,
       meta: {
-        title: '巴中龙泉外国语学校初升高直升考试报名'
+        title: '巴中龙泉外国语学校2021初升高模拟考试报名'
       }
     },
     {
@@ -36,7 +36,7 @@ export const router = new Router({
       name: 'seniorMobile',
       component: SeniorMobile,
       meta: {
-        title: '巴中龙泉外国语学校初升高直升考试报名'
+        title: '巴中龙泉外国语学校2021初升高模拟考试报名'
       }
     },
     {
@@ -44,7 +44,7 @@ export const router = new Router({
       name: 'seniorCard',
       component: SeniorCard,
       meta: {
-        title: '巴中龙泉外国语学校直升考试准考证查看'
+        title: '巴中龙泉外国语学校2021初升高模拟考试准考证'
       }
     },
     {
@@ -92,7 +92,7 @@ export const router = new Router({
       name: 'seniorListMobile',
       component: SeniorListMobile,
       meta: {
-        title: '初升高直升考试报名'
+        title: '巴中龙泉外国语学校2021初升高模拟考试报名'
       }
     },
     {
@@ -100,7 +100,7 @@ export const router = new Router({
       name: 'juniorList',
       component: JuniorList,
       meta: {
-        title: '巴中龙泉外国语学校招生考试成绩查询'
+        title: '巴中龙泉外国语学校2021年初一报名登记'
       }
     },
     {
@@ -108,7 +108,7 @@ export const router = new Router({
           name: 'juniorListMobile',
           component: JuniorListMobile,
           meta: {
-            title: '六年级综合素质测评报名'
+            title: '巴中龙泉外国语学校2021年初一报名登记'
           }
         },
   ]

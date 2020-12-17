@@ -8,7 +8,7 @@
     </el-header>
     <el-main>
       <div class="list">
-        <h2>巴中龙泉外国语学校六年级综合素质测评查询与报名</h2>
+        <h2>巴中龙泉外国语学校{{year}}年初一报名登记</h2>
         <el-row class="padding">
           <el-form :inline="true" label-width="100px">
             <el-form-item label="查询条件">
@@ -45,7 +45,7 @@
               <el-table-column label="操作" width="200" fixed="right">
                 <template slot-scope="scope">
                   <el-button @click="edit(scope.row)" type="text" size="small">修改报名信息</el-button>
-                  <el-button @click="see(scope.row.id)" type="text" size="small">查看报名证信息</el-button>
+                  <!-- <el-button @click="see(scope.row.id)" type="text" size="small">查看报名证信息</el-button> -->
                 </template>
               </el-table-column>
             </el-table>
@@ -141,7 +141,7 @@
                 <h3><span></span>班主任电话/Head Teacher's Phone</h3>
                 <el-input v-model="ruleForm.head_teacher_phone"></el-input>
               </el-form-item>
-              <el-form-item prop="photo" style="text-align: left">
+              <!-- <el-form-item prop="photo" style="text-align: left">
                 <h3><span></span>上传附件/Attachments</h3>
                 <p style="margin: 0;padding: 0;line-height: 20px;color: #aaa;">近期1寸免冠照片<span style="color: red;font-size: 0.1rem;">(大小不超过3M,格式为PNG/JPG/JPEG)</span></p>
                 <el-upload
@@ -153,7 +153,7 @@
                   <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
                   <i v-else class="el-icon-plus"></i>
                 </el-upload>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item style="margin: 0.3rem 0 0;">
                 <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
                 <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -261,16 +261,17 @@
           head_teacher_phone: [
             { required: true, message: '请输入/Please input...', trigger: 'blur' },
             {pattern: /^1[0-9]{10}$/, message: '请输入正确的手机号格式', trigger: 'blur'}
-          ],
-          photo: [{
-            required: true, trigger: 'blur', validator: (rule, value, callback) => {
-              if (!this.ruleForm.photo) {
-                callback(new Error('请上传一寸照片'))
-              } else {
-                callback()
-              }
-            }
-          }]
+          ]
+          // ,
+          // photo: [{
+          //   required: true, trigger: 'blur', validator: (rule, value, callback) => {
+          //     if (!this.ruleForm.photo) {
+          //       callback(new Error('请上传一寸照片'))
+          //     } else {
+          //       callback()
+          //     }
+          //   }
+          // }]
         }
       }
     },

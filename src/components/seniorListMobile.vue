@@ -86,7 +86,7 @@
             <img :src="ticketImg" alt="" width="100%" height="100%">
           </div>
         </el-dialog>
-        <el-dialog title="巴中龙泉外国语学校初升高直升考试报名" :visible.sync="seniorDialog" v-if="seniorDialog" width="650px" @closed="ruleClose">
+        <el-dialog title="巴中龙泉外国语学校2021初升高模拟考试报名" :visible.sync="seniorDialog" v-if="seniorDialog" width="650px" @closed="ruleClose">
           <div class="box">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
               <el-form-item prop="name">
