@@ -152,7 +152,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://139.155.15.107:8000/bzlq/file/upload/image',
+        uploadUrl: 'http://api.ostep.com.cn/bzlq/file/upload/image',
         openId: this.$route.params.openid == null? '' : this.$route.params.openid,
         loading: '',
         classList: [],
@@ -320,7 +320,7 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://139.155.15.107:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
                   this.loading.close();
                   console.log(JSON.stringify(response));
@@ -425,15 +425,15 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://139.155.15.107:8000/bzlq/candidate/junior/save', query).then(res => {
+            this.axios.post('http://api.ostep.com.cn/bzlq/candidate/junior/save', query).then(res => {
               if(res.data.result_code === 200){
+                this.$router.push({name: 'juniorListMobile'})
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong>`, '成功提示', {
                   dangerouslyUseHTMLString: true,
                   closeOnClickModal: true,
                   showConfirmButton: false,
                   showClose: true
                 });
-                 this.$router.push({path: '/juniorListMobile'})
               } else {
                 MessageBox.alert(`<strong style="color: red">${res.data.msg}</strong>`, '提示', {
                   dangerouslyUseHTMLString: true,

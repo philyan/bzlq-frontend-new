@@ -11,17 +11,36 @@ import SeniorListMobile from '@/components/seniorListMobile'
 import JuniorList from '@/components/juniorList'
 import JuniorListMobile from '@/components/juniorListMobile'
 import Login from '@/components/login'
+import RegisterLink from '@/components/registerLink'
 
 Vue.use(Router)
 // 打包哪个页面就将redirect重定向到哪个页面，PC端后台系统定向到/login
 // login上面的除开第一条均为手机端页面，打包后台时需要屏蔽掉
 // 打包手机端时候打开mode: 'history‘，打包PC端后台系统时屏蔽掉
+
+const Register = {
+  template: `
+    <div class="user">
+      <router-view></router-view>
+    </div>
+  `
+}
+
 export const router = new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: "hash",
   routes: [
     {
       path:'',
-      redirect: '/login'
+      redirect: 'login'
+    },
+    {
+      path:'/register',
+      name: 'register',
+      component: RegisterLink,
+      meta: {
+        title: '巴中龙泉外国语学校招生报名系统'
+      }
     },
     {
       path:'/senior',
@@ -32,11 +51,11 @@ export const router = new Router({
       }
     },
     {
-      path:'/seniorMobile',
+      path:'/senior/seniorMobile',
       name: 'seniorMobile',
       component: SeniorMobile,
       meta: {
-        title: '巴中龙泉外国语学校2021初升高模拟考试报名'
+        title: '巴中龙泉外国语学校2021年初升高模拟考试报名'
       }
     },
     {
@@ -44,7 +63,7 @@ export const router = new Router({
       name: 'seniorCard',
       component: SeniorCard,
       meta: {
-        title: '巴中龙泉外国语学校2021初升高模拟考试准考证'
+        title: '巴中龙泉外国语学校2021年初升高模拟考试准考证'
       }
     },
     {
@@ -52,15 +71,15 @@ export const router = new Router({
       name: 'junior',
       component: Junior,
       meta: {
-        title: '巴中龙泉外国语学校六年级综合素质测评报名'
+        title: '巴中龙泉外国语学校2021年初一报名登记'
       }
     },
     {
-      path:'/juniorMobile',
+      path:'/junior/juniorMobile',
       name: 'juniorMobile',
       component: JuniorMobile,
       meta: {
-        title: '巴中龙泉外国语学校六年级综合素质测评报名'
+        title: '巴中龙泉外国语学校2021年初一报名登记'
       }
     },
     {
@@ -92,7 +111,7 @@ export const router = new Router({
       name: 'seniorListMobile',
       component: SeniorListMobile,
       meta: {
-        title: '巴中龙泉外国语学校2021初升高模拟考试报名'
+        title: '巴中龙泉外国语学校2021年初升高模拟考试报名'
       }
     },
     {

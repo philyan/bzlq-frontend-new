@@ -165,7 +165,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://139.155.15.107:8000/bzlq/file/upload/image',
+        uploadUrl: 'http://api.ostep.com.cn/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
@@ -262,7 +262,7 @@
         }
         return arr
       })()
-      this.axios.get('http://139.155.15.107:8000/bzlq/candidate/junior/getByCode?js_code=' + getQuery('code')).then(res => {
+      this.axios.get('http://api.ostep.com.cn/bzlq/candidate/junior/getByCode?js_code=' + getQuery('code')).then(res => {
         if(res.data.result_code === 200){
           this.ruleForm = res.data.data
         } else if(res.data.result_code === 401){
@@ -344,7 +344,7 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://139.155.15.107:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
                   console.log(JSON.stringify(response));
                   var url = response.data;
@@ -448,7 +448,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://139.155.15.107:8000/bzlq/candidate/junior/save', query).then(res => {
+            this.axios.post('http://api.ostep.com.cn/bzlq/candidate/junior/save', query).then(res => {
               if(res.data.result_code === 200){
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong>`, '成功提示', {
                   dangerouslyUseHTMLString: true,

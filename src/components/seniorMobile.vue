@@ -111,7 +111,7 @@
             />
             <!-- 剪切图片的弹框-->
             <div class="upload-dialog" id="cutImagBox">
-              <a-modal title="图片裁剪" class="upload_dialog_a" v-model="isCropper" :on-ok="false" footer>
+              <a-model title="图片裁剪" class="upload_dialog_a" v-model="isCropper" :on-ok="false" footer>
                 <el-form-item style="margin-top: 0.1rem;">
                     <el-button type="primary" @click="turnRight">旋转</el-button>
                     <el-button type="primary" @click="changeScale(2)">放大</el-button>
@@ -142,7 +142,7 @@
                         ></vueCropper>
                   </div>
                 </div>
-              </a-modal>
+              </a-model>
             </div>
           </div>
           <span slot="footer" class="dialog-footer">
@@ -189,7 +189,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://139.155.15.107:8000/bzlq/file/upload/image',
+        uploadUrl: 'http://api.ostep.com.cn/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
@@ -297,7 +297,7 @@
         }
         return arr
       })()
-      // this.axios.get('http://139.155.15.107:8000/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
+      // this.axios.get('http://api.ostep.com.cn/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
       //   if(res.data.result_code === 200){
       //     this.ruleForm = res.data.data
       //   } else if(res.data.result_code === 401){
@@ -380,7 +380,7 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://139.155.15.107:8000/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
                   this.loading.close();
                   console.log(JSON.stringify(response));
@@ -412,7 +412,7 @@
                 };
           this.$axios
             .post(
-              "http://139.155.15.107:8000/bzlq/file/upload/image1",
+              "http://api.ostep.com.cn/bzlq/file/upload/image1",
               data,
               config
             )
@@ -484,7 +484,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://139.155.15.107:8000/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('http://api.ostep.com.cn/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 // MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong><br>是否跳转到准考证页面？`, '提示', {
                 //   dangerouslyUseHTMLString: true,
@@ -504,7 +504,7 @@
                   showConfirmButton: false,
                   showClose: true
                 });
-                this.$router.push({path: '/seniorListMobile'})
+                this.$router.push({name: 'seniorListMobile'})
               } else {
                 MessageBox.alert(`<strong style="color: red">${res.data.msg}</strong>`, '提示', {
                   dangerouslyUseHTMLString: true,
