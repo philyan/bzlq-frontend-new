@@ -123,7 +123,7 @@
                           style="height:200px;"
                           ref="cropper"
                           :img="option.img"
-                          :outputSize="option.size"
+                          :outputSize="option.outputSize"
                           :outputType="option.outputType"
                           :info="option.info"
                           :full="option.full"
@@ -147,7 +147,7 @@
           </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="upload">上 传</el-button>
+            <el-button type="primary" @click="onCubeImg">上 传</el-button>
           </span>
         </el-dialog>  
       </el-form-item>
@@ -200,7 +200,7 @@
         option: {
           img: "", // 裁剪图片的地址
           info: true, // 裁剪框的大小信息
-          outputSize: 1, // 剪切后的图片质量（0.1-1）
+          outputSize: 0.3, // 剪切后的图片质量（0.1-1）
           full: true, // 输出原图比例截图 props名full
           outputType: "jpg", // 裁剪生成额图片的格式
           canMove: false, // 能否拖动图片
@@ -396,43 +396,12 @@
       //剪切上传
       // 获取cropper的截图的base64 数据
       this.$refs.cropper.getCropData(async fileImg => {
-        try {
-          let file = fileImg;
-          let data = new FormData();
-          var str = file.replace('data:image/jpeg;base64,', '');
-          var strLength = str.length;
-          if((strLength / 1024).toFixed(2)>=2000){
-             alert("图片超过2M,不能上传");
-            return;
-          }
-          data.append("file", file);
-          console.log(data.get('file'));
-          let config = {
-                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                };
-          this.$axios
-            .post(
-              "http://api.ostep.com.cn/bzlq/file/upload/image1",
-              data,
-              config
-            )
-            .then(res => {
-              console.log(JSON.stringify(res));
-              let fileurl = res.data;
-              if (res.status == 200) {
-
-                this.dialogVisible = false;
-                this.fileImgList.push({
-                  url: fileurl
-                });
-                this.$emit('getUrl',this.fileImgList[0].url)
-                this.option.img = "";//重置组件数据
-                this.show = false;
-              }
-            })
-            .catch(err => {});
-        } catch (e){
-        };
+        // try {
+          let imgtype = (fileImg.substring(fileImg.lastIndexOf('.') + 1)).toLowerCase();
+          console.log(imgtype);
+          this.dealImage(fileImg, 500, this.uploadImg)
+        // } catch (e){
+        // };
       });
     },
     // 将base64的图片转换为file文件
@@ -523,8 +492,77 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.ruleForm.photo = ''
+      },
+      //压缩方法
+      dealImage(base64, w, callback) {
+          var newImage = new Image();
+          var quality = 0.9;    //压缩系数0-1之间
+          newImage.src = base64;
+          newImage.setAttribute("crossOrigin", 'Anonymous');	//url为外域时需要
+          var imgWidth, imgHeight;
+          newImage.onload = function () {
+              imgWidth = this.width;
+              imgHeight = this.height;
+              var canvas = document.createElement("canvas");
+              var ctx = canvas.getContext("2d");
+              if (Math.max(imgWidth, imgHeight) > w) {
+                  if (imgWidth > imgHeight) {
+                      canvas.width = w;
+                      canvas.height = w * imgHeight / imgWidth;
+                  } else {
+                      canvas.height = w;
+                      canvas.width = w * imgWidth / imgHeight;
+                  }
+              } else {
+                  canvas.width = imgWidth;
+                  canvas.height = imgHeight;
+                  quality = 0.9;
+              }
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+              var base64 = canvas.toDataURL("image/jpeg", quality); //压缩语句
+              // 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
+              while (base64.length / 1024 > 150) {
+              	quality -= 0.01;
+              	base64 = canvas.toDataURL("image/jpeg", quality);
+              }
+              //防止最后一次压缩低于最低尺寸，只要quality递减合理，无需考虑
+              while (base64.length / 1024 < 50) {
+              	quality += 0.001;
+              	base64 = canvas.toDataURL("image/jpeg", quality);
+              }
+              callback(base64);//必须通过回调函数返回，否则无法及时拿到该值
+          }
+      },
+      uploadImg(base64){
+        let file = this.dataURLtoBlob(base64);
+        this.openFullScreen1();
+        let data = new FormData();
+        data.append("file", file);
+        console.log(data.get('file'));
+        let formData = new FormData();
+        formData.append("file", file);
+        this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+          .then((response)=>{
+                this.loading.close();
+                console.log(JSON.stringify(response));
+                var url = response.data;
+                if(response.status == 200){
+                  this.ruleForm.photo = url;
+                  this.dialogVisible = false;
+                }
+              })
+          .catch(err => {});
+ 
+      },
+      dataURLtoBlob(dataurl){
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
       }
-
     }
   }
 </script>
