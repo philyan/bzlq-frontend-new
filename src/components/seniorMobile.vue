@@ -91,7 +91,7 @@
           <i v-else class="el-icon-plus"></i>
         </el-upload> -->
         <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar" width="110px" height="151px">
-         <el-button type="text" @click="dialogVisible = true">点击上传照片</el-button>
+         <el-button type="text" @click="dialogVisible = true">请点击上传照片</el-button>
         <el-dialog
           title=""
           :visible.sync="dialogVisible"
@@ -101,7 +101,7 @@
               class="btn btn-orange"
               for="uploads"
               style="display:inline-block;width: 100%;padding: 0;font-size: 16px; font-weight: bold;"
-            >点击此处选择照片</label>
+            >请点击此处选择照片</label>
             <input
               type="file"
               id="uploads"

@@ -2,13 +2,13 @@
   <el-container>
     <el-header>
       <el-menu default-active="1" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">巴中龙泉外国语学校{{year}}初升高模拟考试报名表</el-menu-item>
-        <el-menu-item index="2">巴中龙泉外国语学校{{year}}年初一报名登记表</el-menu-item>
+        <el-menu-item index="1">巴中龙泉外国语学校{{year}}年初升高模拟考试报名表</el-menu-item>
+        <el-menu-item index="2">巴中龙泉外国语学校{{year}}年年初一报名登记表</el-menu-item>
       </el-menu>
     </el-header>
     <el-main>
       <div class="list">
-        <h2>巴中龙泉外国语学校初升高直升考试查询与报名</h2>
+        <h2>巴中龙泉外国语学校{{year}}年初升高直升考试查询与报名</h2>
         <el-row class="padding">
           <el-form :inline="true" label-width="100px">
             <el-form-item label="查询条件">
@@ -42,7 +42,9 @@
               <el-table-column prop="points_of_english" label="英语" width="80"></el-table-column>
               <el-table-column prop="total_points" label="总分" width="80"></el-table-column>
               <el-table-column prop="level" label="等级" width="80"></el-table-column>
-              <el-table-column prop="fee" label="费用" width="80"></el-table-column>
+              <el-table-column prop="fee" label="学费" width="80"></el-table-column>
+              <el-table-column prop="homestay_fee" label="住宿费" width="80"></el-table-column>
+              <el-table-column prop="incidental_fee" label="杂费" width="80"></el-table-column>
               <el-table-column prop="description" label="备注" width="150" :show-overflow-tooltip="true"></el-table-column>
               <el-table-column prop="self_assess" label="自评"></el-table-column>
               <el-table-column label="操作" width="240" fixed="right">

@@ -54,6 +54,7 @@
        link(){
          console.log(this.level)
          if(this.level === 'junior'){
+            // this.$router.push({name: 'registerByMobileExpire',params:{message:'小升初报名已结束!'}})
            this.$router.push({name: 'juniorListMobile'})
          }else if(this.level === 'senior'){
            this.$router.push({name: 'seniorListMobile'})

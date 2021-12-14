@@ -9,11 +9,16 @@
           {{item.subject}}：{{item.points}}
         </p>
         <p class="indent">{{fetchData.level.label}}：{{fetchData.level.value}}</p>
-        <p class="indent">{{fetchData.fee.label}}：{{fetchData.fee.value}}</p>
-        <p class="indent">备注：</p>
-        <p style="padding-left: 2em">1.咨询电话0827–5281170     5281172</p>
-        <p style="padding-left: 2em">2.就读报名方式:招生办现场报读或线上报读(按提示操作)。</p>
-        <p style="padding-left: 2em">3.即日起开始就读报名，学位有限，名额报完截止。</p>
+        <p class="indent">{{fetchData.grade.label}}：{{fetchData.grade.value}}</p>
+      </el-col>
+      <el-col v-if="showPass">
+        <p class="indent">{{fetchData.fee.label}}：{{fetchData.fee.value}}/学期</p>
+        <p class="indent">{{fetchData.homestayFee.label}}：{{fetchData.homestayFee.value}}/学期</p>
+        <p class="indent">{{fetchData.incidentalFee.label}}：{{fetchData.incidentalFee.value}}/学期</p>
+        <p class="indent">{{fetchData.description.label}}{{fetchData.description.value}}</p>
+      </el-col>
+      <el-col>
+        <p style="padding-left: 2em">咨询电话: 0827–5281170     5281172</p>
         <p class="indent">{{fetchData.subname}}</p>
       </el-col>
     </el-row>
@@ -25,8 +30,8 @@
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
           <el-form-item prop="identity_num">
-            <h3><span></span>身份证号码/No.</h3>
-            <el-input v-model="ruleForm.identity_num" placeholder="请输入/Please input..."></el-input>
+            <h3><span></span>手机号码(本人、父母亲手机号均可)/Phone.</h3>
+            <el-input v-model="ruleForm.phone" placeholder="请输入/Please input..."></el-input>
           </el-form-item>
           <el-form-item style="margin-top: 0.3rem;">
             <el-button type="primary" @click="submitForm('ruleForm')">查询</el-button>
@@ -59,17 +64,17 @@
       return {
         ruleForm: {
           name: '',
-          identity_num: ''
+          phone: ''
         },
         rules: {
           name: [
-            {required: true, message: '请输入/Please input...', trigger: 'blur'}
+            {required: true, message: '请输入考生姓名/Please input...', trigger: 'blur'}
           ],
-          identity_num: [
-            {required: true, message: '请输入/Please input...', trigger: 'change'},
+          phone: [
+            {required: true, message: '请输入手机号/Please input...', trigger: 'change'},
             {
-              pattern: /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
-              message: '请输入正确的身份证号码格式',
+              pattern: /^1[34578]\d{9}$/,
+              message: '请输入正确的手机格式',
               trigger: 'blur'
             }
           ]
@@ -78,26 +83,11 @@
         fetchData: {
           level: {},
           fee: {}
-        }
+        },
+        showPass: true
       }
     },
-    mounted(){
-      this.axios.get('http://api.ostep.com.cn/bzlq/candidate/result?js_code=' + getQuery('code')).then(res => {
-        if (res.data.result_code === 200) {
-          this.openType = true
-          this.fetchData = res.data.data
-        } else if (res.data.result_code === 401) {
-          this.openType = false
-        } else {
-          MessageBox.alert(`<strong style="color: red">${res.data.msg}</strong>`, '提示', {
-            dangerouslyUseHTMLString: true,
-            closeOnClickModal: true,
-            showConfirmButton: false,
-            showClose: true
-          })
-        }
-      })
-    }
+    mounted(){}
     ,
     computed: {}
     ,
@@ -106,11 +96,14 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.get(`http://api.ostep.com.cn/bzlq/candidate/result/byIdNumAndName?id_num=${query.identity_num}&name=${query.name}
+            this.axios.get(`http://api.ostep.com.cn/bzlq/candidate/senior/result?phone=${query.phone}&name=${query.name}
 `).then(res => {
               if (res.data.result_code === 200) {
                 this.openType = true
                 this.fetchData = res.data.data
+                if(this.fetchData.level.value == '未录取'){
+                   this.showPass = false
+                }
               } else {
                 MessageBox.alert(`<strong style="color: red">${res.data.msg}</strong>`, '提示', {
                   dangerouslyUseHTMLString: true,

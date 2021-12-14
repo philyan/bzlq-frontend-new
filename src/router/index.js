@@ -5,13 +5,15 @@ import SeniorMobile from '@/components/seniorMobile'
 import SeniorCard from '@/components/seniorCard'
 import Junior from '@/components/junior'
 import JuniorMobile from '@/components/juniorMobile'
-import Fetch from '@/components/fetch'
+import Fetch from '@/components/seniorResult'
 import SeniorList from '@/components/seniorList'
 import SeniorListMobile from '@/components/seniorListMobile'
 import JuniorList from '@/components/juniorList'
 import JuniorListMobile from '@/components/juniorListMobile'
 import Login from '@/components/login'
 import RegisterLink from '@/components/registerLink'
+import RegisterByMobileExpire from '@/components/registerByMobileExpire'
+import { getSessionItem } from '../common/util'
 
 Vue.use(Router)
 // 打包哪个页面就将redirect重定向到哪个页面，PC端后台系统定向到/login
@@ -35,6 +37,14 @@ export const router = new Router({
       redirect: 'login'
     },
     {
+      path:'/registerByMobileExpire',
+      name: 'registerByMobileExpire',
+      component: RegisterByMobileExpire,
+      meta: {
+        title: '停止报名提示'
+      }
+    },
+    {
       path:'/register',
       name: 'register',
       component: RegisterLink,
@@ -48,6 +58,13 @@ export const router = new Router({
       component: Senior,
       meta: {
         title: '巴中龙泉外国语学校2021初升高模拟考试报名'
+      },
+      beforeEnter: (to, from, next) => {
+        if(!getSessionItem('token')){
+          next({name: 'login'})
+        }else{
+          next();
+        }
       }
     },
     {
@@ -55,7 +72,7 @@ export const router = new Router({
       name: 'seniorMobile',
       component: SeniorMobile,
       meta: {
-        title: '巴中龙泉外国语学校2021年初升高模拟考试报名'
+        title: '巴中龙泉外国语学校2022年初升高模拟考试报名'
       }
     },
     {
@@ -64,6 +81,13 @@ export const router = new Router({
       component: SeniorCard,
       meta: {
         title: '巴中龙泉外国语学校2021年初升高模拟考试准考证'
+      },
+      beforeEnter: (to, from, next) => {
+        if(!getSessionItem('token')){
+          next({name: 'login'})
+        }else{
+          next();
+        }
       }
     },
     {
@@ -72,7 +96,15 @@ export const router = new Router({
       component: Junior,
       meta: {
         title: '巴中龙泉外国语学校2021年初一报名登记'
+      },
+      beforeEnter: (to, from, next) => {
+        if(!getSessionItem('token')){
+          next({name: 'login'})
+        }else{
+          next();
+        }
       }
+
     },
     {
       path:'/junior/juniorMobile',
@@ -83,8 +115,8 @@ export const router = new Router({
       }
     },
     {
-      path:'/fetch',
-      name: 'fetch',
+      path:'/seniorResult',
+      name: 'seniorResult',
       component: Fetch,
       meta: {
         title: '巴中龙泉外国语学校招生考试成绩查询'
@@ -104,6 +136,13 @@ export const router = new Router({
       component: SeniorList,
       meta: {
         title: '巴中龙泉外国语学校招生考试成绩查询'
+      },
+      beforeEnter: (to, from, next) => {
+        if(!getSessionItem('token')){
+          next({name: 'login'})
+        }else{
+          next();
+        }
       }
     },
     {
@@ -120,23 +159,33 @@ export const router = new Router({
       component: JuniorList,
       meta: {
         title: '巴中龙泉外国语学校2021年初一报名登记'
+      },
+      beforeEnter: (to, from, next) => {
+        if(!getSessionItem('token')){
+          next({name: 'login'})
+        }else{
+          next();
+        }
       }
     },
     {
-          path:'/juniorListMobile',
-          name: 'juniorListMobile',
-          component: JuniorListMobile,
-          meta: {
-            title: '巴中龙泉外国语学校2021年初一报名登记'
-          }
-        },
+      path:'/juniorListMobile',
+      name: 'juniorListMobile',
+      component: JuniorListMobile,
+      meta: {
+        title: '巴中龙泉外国语学校2021年初一报名登记'
+      }
+    },
   ]
 })
-// 路由前置导航守卫
-router.beforeEach((to,from,next)=>{
-  // 根据路由元信息设置文档标题
-  window.document.title = to.meta.title
-  next()
-})
+
+
+
+
+// // 路由前置导航守卫
+// router.beforeEach((to,from,next)=>{
+//   // 根据路由元信息设置文档标题
+//   window.document.title = to.meta.title
+// })
 
 export default router

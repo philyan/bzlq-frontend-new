@@ -2,7 +2,7 @@
   <el-container>
     <el-header>
       <el-menu default-active="2" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">巴中龙泉外国语学校{{year}}初升高模拟考试报名表</el-menu-item>
+        <el-menu-item index="1">巴中龙泉外国语学校{{year}}年初升高模拟考试报名表</el-menu-item>
         <el-menu-item index="2">巴中龙泉外国语学校{{year}}年初一报名登记表</el-menu-item>
       </el-menu>
     </el-header>
@@ -27,7 +27,7 @@
             <el-table :data="tableData" border style="width: 100%" class="left">
               <el-table-column prop="no" label="考号" width="100" fixed></el-table-column>
               <el-table-column prop="name" label="姓名" width="100" fixed></el-table-column>
-              <el-table-column prop="gender" label="性别" :formatter="genderFmt"></el-table-column>
+              <el-table-column prop="gender" label="性别" width="50" :formatter="genderFmt"></el-table-column>
               <el-table-column prop="identity_num" label="身份证号码" width="170"></el-table-column>
               <el-table-column prop="parent_phone" label="父亲电话" width="120"></el-table-column>
               <el-table-column prop="parent_phone_back" label="母亲电话" width="120"></el-table-column>

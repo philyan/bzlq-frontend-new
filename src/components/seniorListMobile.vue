@@ -2,14 +2,16 @@
   <el-container>
     <el-main>
       <div class="list">
+        <!-- 结束报名按钮去掉 -->
+        <h3 style="text-align:center;">巴中龙泉外国语学校{{year}}年初升高报名登记表</h3>
         <el-button type="primary" @click="addMobile">开始报名</el-button>
         <el-row class="padding">
           <el-col :span='24'>
-            <el-table :data="tableData" border style="width: 100%" class="left">
-              <el-table-column prop="no" label="考号" width="100"></el-table-column>
-              <el-table-column prop="name" label="姓名" width="80"></el-table-column>
-              <el-table-column prop="gender" label="性别" width="50" :formatter="genderFmt"></el-table-column>
-              <el-table-column label="操作" width="100">
+            <el-table :data="tableData" border style="width: 100%" class="center">
+              <el-table-column prop="no" label="考号"></el-table-column>
+              <el-table-column prop="name" label="姓名"></el-table-column>
+              <el-table-column prop="gender" label="性别" :formatter="genderFmt"></el-table-column>
+              <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button @click="editMobile(scope.row)" type="text" size="small">修改</el-button>
                   <el-button @click="see(scope.row.id)" type="text" size="small">准考证</el-button>
