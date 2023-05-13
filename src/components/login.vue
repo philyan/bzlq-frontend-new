@@ -50,7 +50,7 @@
           username: this.formData.username,
           password: this.formData.psd
         }
-        this.axios.post(`http://api.ostep.com.cn/bzlq/checkPass?username=${params.username}&password=${params.password}`).then(res => {
+        this.axios.post(`https://bzlqwgyxx.cn/bzlq/checkPass?username=${params.username}&password=${params.password}`).then(res => {
           if (res.data.result_code === 200) {
             saveSessionItem('token', res.data.data.token)
             this.$router.push({path: '/seniorList'})

@@ -151,7 +151,7 @@
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="upload">确 定</el-button>
           </span>
-        </el-dialog>  
+        </el-dialog>
       </el-form-item>
       <el-form-item style="margin-top: 0.3rem;">
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
@@ -191,7 +191,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://api.ostep.com.cn/bzlq/file/upload/image',
+        uploadUrl: 'https://bzlqwgyxx.cn/bzlq/file/upload/image',
         openId: '',
         loading: '',
         classList: [],
@@ -299,7 +299,7 @@
         }
         return arr
       })()
-      this.axios.get('http://api.ostep.com.cn/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
+      this.axios.get('https://bzlqwgyxx.cn/bzlq/candidate/senior/getByCode?js_code=' + getQuery('code')).then(res => {
         if(res.data.result_code === 200){
           this.ruleForm = res.data.data
         } else if(res.data.result_code === 401){
@@ -372,7 +372,7 @@
     },
 
     upload(){
-      this.$refs.cropper.getCropBlob((fileImg) => { 
+      this.$refs.cropper.getCropBlob((fileImg) => {
             let file = fileImg;
             var strLength = file.length;
             if((strLength / 1024).toFixed(2)>=2000){
@@ -381,7 +381,7 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("https://bzlqwgyxx.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
                   console.log(JSON.stringify(response));
                   var url = response.data;
@@ -485,7 +485,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://api.ostep.com.cn/bzlq/candidate/senior/save', query).then(res => {
+            this.axios.post('https://bzlqwgyxx.cn/bzlq/candidate/senior/save', query).then(res => {
               if(res.data.result_code === 200){
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong><br>是否跳转到准考证页面？`, '提示', {
                   dangerouslyUseHTMLString: true,
@@ -496,7 +496,7 @@
                   confirmButtonText: '是',
                   cancelButtonText: '否',
                   callback: () => {
-                    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2766ded8fe75c847&redirect_uri=https%3a%2f%2fapi.ostep.com.cn%2fseniorCard&response_type=code&scope=snsapi_base#wechat_redirect'
+                    window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2766ded8fe75c847&redirect_uri=https%3a%2f%2fbzlqwgyxx.cn%2fseniorCard&response_type=code&scope=snsapi_base#wechat_redirect'
                   }
                 })
               } else {

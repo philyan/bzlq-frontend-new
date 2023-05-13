@@ -113,7 +113,7 @@
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="upload">上 传</el-button>
           </span>
-        </el-dialog>    
+        </el-dialog>
       </el-form-item> -->
       <el-form-item style="margin-top: 0.3rem;">
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
@@ -152,7 +152,7 @@
       return {
         dialogVisible: false,
         visible: false,
-        uploadUrl: 'http://api.ostep.com.cn/bzlq/file/upload/image',
+        uploadUrl: 'https://bzlqwgyxx.cn/bzlq/file/upload/image',
         openId: this.$route.params.openid == null? '' : this.$route.params.openid,
         loading: '',
         classList: [],
@@ -177,7 +177,7 @@
           fixed: true,
           fixedNumber: [5, 7] //截图框的宽高比例
         },
-        
+
         ruleForm: this.$route.params.stuInfo == null? {
           "name":"", //姓名
           "gender":"", //性别
@@ -310,7 +310,7 @@
     },
 
     upload(){
-      this.$refs.cropper.getCropBlob((fileImg) => { 
+      this.$refs.cropper.getCropBlob((fileImg) => {
             this.openFullScreen1();
             let file = fileImg;
             var strLength = file.length;
@@ -320,7 +320,7 @@
             }
             let formData = new FormData();
             formData.append("file", file);
-            this.$http.post("http://api.ostep.com.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+            this.$http.post("https://bzlqwgyxx.cn/bzlq/file/upload/image", formData, {contentType: false, processData: false, headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
                 .then((response)=>{
                   this.loading.close();
                   console.log(JSON.stringify(response));
@@ -425,7 +425,7 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('http://api.ostep.com.cn/bzlq/candidate/junior/save', query).then(res => {
+            this.axios.post('https://bzlqwgyxx.cn/bzlq/candidate/junior/save', query).then(res => {
               if(res.data.result_code === 200){
                 this.$router.push({name: 'juniorListMobile'})
                 MessageBox.alert(`<strong style="color: blue">${res.data.msg}</strong>`, '成功提示', {

@@ -1,7 +1,7 @@
 <template>
    <el-dialog title="错误链接,请联系管理员" :visible.sync="seeDialog" v-if="seeDialog">
           <div>
-            <img src="http://api.ostep.com.cn/file/spec/signet.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
+            <img src="https://bzlqwgyxx.cn/file/spec/signet.png" alt="" style="width: 71px;height: 57px;position: absolute;top: 0;left: 5px;z-index: 1;" crossorigin="anonymous">
           </div>
           <div slot="footer" class="dialog-footer">
             <el-button @click="seeDialog = false">关闭</el-button>
@@ -42,7 +42,7 @@
       }
     },
     mounted() {
-      
+
     },
     computed: {
 
@@ -62,7 +62,7 @@
            this.seeDialog = true
          }
        },
-       
+
     }
   }
 </script>

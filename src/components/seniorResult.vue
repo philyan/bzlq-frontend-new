@@ -96,7 +96,7 @@
         let query = JSON.parse(JSON.stringify(this.ruleForm))
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.get(`http://api.ostep.com.cn/bzlq/candidate/senior/result?phone=${query.phone}&name=${query.name}
+            this.axios.get(`https://bzlqwgyxx.cn/bzlq/candidate/senior/result?phone=${query.phone}&name=${query.name}
 `).then(res => {
               if (res.data.result_code === 200) {
                 this.openType = true
